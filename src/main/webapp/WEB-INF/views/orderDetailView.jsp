@@ -151,6 +151,7 @@
               </div> <!-- table.responsive-md.// -->
 
               <form action="${pageContext.request.contextPath}/orderDetail" method="post">
+                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                 <div class="card-footer py-3">
                   <a href="#" class="btn btn-primary me-2">Theo dõi đơn hàng</a>
                   <input type="hidden" name="id" value="${requestScope.order.id}">

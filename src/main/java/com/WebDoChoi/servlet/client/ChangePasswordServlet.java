@@ -2,6 +2,7 @@ package com.WebDoChoi.servlet.client;
 
 import com.WebDoChoi.beans.User;
 import com.WebDoChoi.service.UserService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.HashingUtils;
 
 import javax.servlet.ServletException;
@@ -23,6 +24,10 @@ public class ChangePasswordServlet extends HomeServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
         Map<String, String> values = new HashMap<>();
         values.put("currentPassword", request.getParameter("currentPassword"));
         values.put("newPassword", request.getParameter("newPassword"));

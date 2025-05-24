@@ -30,6 +30,7 @@
         <div class="col-md-4 col-sm-12">
           <h5 class="pb-2 text-white">Đăng ký nhận tin</h5> <!-- Thêm class text-white cho tiêu đề -->
           <form action="#" method="post">
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
             <div class="input-group">
               <input type="email" class="form-control" placeholder="Email của bạn ..." required>
               <button class="btn" style="background-color: #ff3385; color: white" type="submit">

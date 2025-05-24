@@ -98,11 +98,15 @@
               </div>
               <form action="${pageContext.request.contextPath}/admin/reviewManager/update" method="post"
                     id="update-hide-${productReview.id}">
+                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
+
                 <input type="hidden" name="id" value="${productReview.id}">
                 <input type="hidden" name="action" value="HIDE">
               </form>
               <form action="${pageContext.request.contextPath}/admin/reviewManager/update" method="post"
                     id="update-show-${productReview.id}">
+                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
+
                 <input type="hidden" name="id" value="${productReview.id}">
                 <input type="hidden" name="action" value="SHOW">
               </form>

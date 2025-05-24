@@ -4,6 +4,7 @@ import com.WebDoChoi.beans.ProductReview;
 import com.WebDoChoi.service.ProductReviewService;
 import com.WebDoChoi.service.ProductService;
 import com.WebDoChoi.service.UserService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.Protector;
 
 import javax.servlet.ServletException;
@@ -56,5 +57,10 @@ public class ProductReviewManagerServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
+    }
 }
