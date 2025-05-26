@@ -89,6 +89,7 @@
                             </c:choose>
                           </p>
                           <form action="${pageContext.request.contextPath}/wishlist" method="post">
+                            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                             <input type="hidden" name="id" value="${wishlistItem.id}">
                             <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip"
                                     title="Xóa khỏi danh sách yêu thích"

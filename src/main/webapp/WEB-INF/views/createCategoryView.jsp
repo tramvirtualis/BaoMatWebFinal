@@ -22,6 +22,7 @@
     <main class="row mb-5">
       <form class="col-lg-6" method="POST" action="${pageContext.request.contextPath}/admin/categoryManager/create"
             enctype="multipart/form-data">
+        <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
         <c:if test="${not empty requestScope.successMessage}">
           <div class="alert alert-success mb-3" role="alert">
               ${requestScope.successMessage}

@@ -16,6 +16,7 @@
     <div class="card-body">
       <h4 class="card-title mb-4">Đăng nhập</h4>
       <form action="${pageContext.request.contextPath}/signin" method="post">
+        <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
         <div class="mb-3">
           <input name="username"
                  class="form-control ${not empty requestScope.violations.usernameViolations

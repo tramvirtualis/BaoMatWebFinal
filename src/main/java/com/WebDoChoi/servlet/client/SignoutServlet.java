@@ -1,5 +1,7 @@
 package com.WebDoChoi.servlet.client;
 
+import com.WebDoChoi.utils.CsrfUtils;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,5 +21,10 @@ public class SignoutServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
+    }
 }

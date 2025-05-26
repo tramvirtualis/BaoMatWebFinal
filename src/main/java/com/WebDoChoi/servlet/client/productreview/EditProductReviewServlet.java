@@ -5,6 +5,7 @@ import com.WebDoChoi.beans.User;
 import com.WebDoChoi.service.ProductReviewService;
 import com.WebDoChoi.service.ProductService;
 import com.WebDoChoi.service.UserService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.Protector;
 import com.WebDoChoi.utils.Validator;
 
@@ -53,6 +54,10 @@ public class EditProductReviewServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
         long id = Protector.of(() -> Long.parseLong(request.getParameter("id"))).get(0L);
         Optional<ProductReview> productReviewFromServer = Protector.of(() -> productReviewService.getById(id))
                 .get(Optional::empty);

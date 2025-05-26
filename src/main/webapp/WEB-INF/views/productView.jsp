@@ -258,6 +258,7 @@
             <div class="ratting-form-wrapper">
               <div class="ratting-form">
                 <form action="${pageContext.request.contextPath}/addProductReview" method="post">
+                  <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                   <div class="row">
                     <div class="col-md-3 mb-3">
                       <select class="form-select ${not empty sessionScope.violations.ratingScoreViolations

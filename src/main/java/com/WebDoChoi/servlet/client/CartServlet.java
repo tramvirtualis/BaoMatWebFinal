@@ -8,6 +8,7 @@ import com.WebDoChoi.dto.SuccessMessage;
 import com.WebDoChoi.service.CartService;
 import com.WebDoChoi.service.OrderItemService;
 import com.WebDoChoi.service.OrderService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.JsonUtils;
 import com.WebDoChoi.utils.Protector;
 
@@ -35,6 +36,10 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Lấy đối tượng orderRequest từ JSON trong request
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
         OrderRequest orderRequest = JsonUtils.get(request, OrderRequest.class);
 
         // Tạo order

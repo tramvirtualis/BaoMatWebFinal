@@ -22,6 +22,8 @@
       </c:if>
       <h4 class="card-title mb-4">Đăng ký</h4>
       <form action="${pageContext.request.contextPath}/signup" method="post">
+        <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
+
         <div class="mb-3">
           <label for="inputUsername" class="form-label">Tên đăng nhập</label>
           <input type="text"
