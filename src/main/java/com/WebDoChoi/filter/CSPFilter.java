@@ -1,3 +1,4 @@
+
 package com.WebDoChoi.filter;
 
 import javax.servlet.Filter;
@@ -19,8 +20,9 @@ public class CSPFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
+        HttpServletResponse httpResp = null;
         if (response instanceof HttpServletResponse) {
-            HttpServletResponse httpResp = (HttpServletResponse) response;
+            httpResp = (HttpServletResponse) response;
 
 
             httpResp.setHeader("Content-Security-Policy",
@@ -33,10 +35,11 @@ public class CSPFilter implements Filter {
                             "frame-ancestors 'none'; " +
                             "base-uri 'self';");
         }
-
+        httpResp.setHeader("X-Frame-Options", "DENY");
         chain.doFilter(request, response);
     }
 
     @Override
     public void destroy() {}
 }
+

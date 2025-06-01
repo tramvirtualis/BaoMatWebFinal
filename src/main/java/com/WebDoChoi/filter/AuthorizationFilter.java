@@ -1,6 +1,7 @@
 package com.WebDoChoi.filter;
 
 import com.WebDoChoi.beans.User;
+import com.WebDoChoi.utils.SecurityLogger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -30,6 +31,9 @@ public class AuthorizationFilter implements Filter {
                 .map(s -> (User) s.getAttribute("currentUser"))
                 .map(User::getRole);
 
+        Optional<User> currentUser = Optional.ofNullable(session)
+                .map(s -> (User) s.getAttribute("currentUser"));
+
         boolean isAdmin = userRole.map("ADMIN"::equals).orElse(false);
         boolean isEmployee = userRole.map("EMPLOYEE"::equals).orElse(false);
         boolean loginRequest = request.getRequestURI().equals(loginURI);
@@ -41,11 +45,21 @@ public class AuthorizationFilter implements Filter {
 
         if (isAdmin || isEmployee || loginRequest) {
             if (isEmployee && isNotAccessibleForEmployee) {
+                SecurityLogger.logUnauthorizedAccess(
+                    currentUser.map(User::getUsername).orElse("unknown"),
+                    request.getRequestURI(),
+                    request
+                );
                 response.sendRedirect(admin401URI);
             } else {
                 chain.doFilter(request, response);
             }
         } else {
+            SecurityLogger.logUnauthorizedAccess(
+                currentUser.map(User::getUsername).orElse("anonymous"),
+                request.getRequestURI(),
+                request
+            );
             response.sendRedirect(loginURI);
         }
     }

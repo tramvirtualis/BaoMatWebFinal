@@ -58,9 +58,6 @@ public class ProductReviewManagerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!CsrfUtils.isValid(request)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
-            return;
-        }
+
     }
 }

@@ -22,9 +22,13 @@
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap-icons.css">
 
+
+
 <!-- Custom CSS -->
+
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/custom.css">
+
 
 <!-- JavaScript -->
 <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.js"></script>

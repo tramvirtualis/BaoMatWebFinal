@@ -1,5 +1,7 @@
 package com.WebDoChoi.servlet.admin.product;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.WebDoChoi.beans.Category;
 import com.WebDoChoi.beans.Product;
 import com.WebDoChoi.service.CategoryService;
@@ -31,23 +33,28 @@ import java.util.Optional;
         maxRequestSize = 1024 * 1024 * 10 // 10 MB
 )
 public class UpdateProductServlet extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(UpdateProductServlet.class);
     private final ProductService productService = new ProductService();
     private final CategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long id = Protector.of(() -> Long.parseLong(request.getParameter("id"))).get(0L);
+        logger.info("Attempting to fetch product with ID: {} for update", id);
+        
         Optional<Product> productFromServer = Protector.of(() -> productService.getById(id)).get(Optional::empty);
 
         if (productFromServer.isPresent()) {
             List<Category> categories = Protector.of(categoryService::getAll).get(ArrayList::new);
             Optional<Category> categoryFromServer = Protector.of(() -> categoryService.getByProductId(id)).get(Optional::empty);
 
+            logger.debug("Successfully retrieved product and categories for update form. Product ID: {}", id);
             request.setAttribute("product", productFromServer.get());
             request.setAttribute("categories", categories);
             categoryFromServer.ifPresent(category -> request.setAttribute("categoryId", category.getId()));
             request.getRequestDispatcher("/WEB-INF/views/updateProductView.jsp").forward(request, response);
         } else {
+            logger.warn("Attempted to update non-existent product with ID: {}", id);
             response.sendRedirect(request.getContextPath() + "/admin/productManager");
         }
     }
@@ -55,11 +62,16 @@ public class UpdateProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!CsrfUtils.isValid(request)) {
+            logger.error("CSRF token validation failed for product update request");
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
             return;
         }
+
+        long productId = Protector.of(() -> Long.parseLong(request.getParameter("id"))).get(0L);
+        logger.info("Processing product update request for product ID: {}", productId);
+
         Product product = new Product();
-        product.setId(Protector.of(() -> Long.parseLong(request.getParameter("id"))).get(0L));
+        product.setId(productId);
         product.setName(request.getParameter("name"));
         product.setPrice(Protector.of(() -> Double.parseDouble(request.getParameter("price"))).get(0d));
         product.setDiscount(Protector.of(() -> Double.parseDouble(request.getParameter("discount"))).get(0d));
@@ -136,40 +148,58 @@ public class UpdateProductServlet extends HttpServlet {
                 .orElseGet(Collections::emptyList));
 
         int sumOfViolations = violations.values().stream().mapToInt(List::size).sum();
-        String successMessage = "Sửa thành công!";
-        String errorMessage = "Sửa thất bại!";
-
-        if (sumOfViolations == 0) {
-            if (product.getImageName() != null) {
-                String currentImageName = product.getImageName();
-                if (deleteImage != null) {
-                    ImageUtils.delete(currentImageName);
-                    product.setImageName(null);
-                }
-                ImageUtils.upload(request).ifPresent(imageName -> {
-                    ImageUtils.delete(currentImageName);
-                    product.setImageName(imageName);
-                });
-            } else {
-                ImageUtils.upload(request).ifPresent(product::setImageName);
-            }
-
-            Optional<Category> categoryFromServer = Protector.of(() -> categoryService.getByProductId(product.getId()))
-                    .get(Optional::empty);
-
-            Protector.of(() -> {
-                        productService.update(product);
-                        if (categoryFromServer.isPresent()) {
-                            productService.updateProductCategory(product.getId(), categoryId);
-                        } else {
-                            productService.insertProductCategory(product.getId(), categoryId);
-                        }
-                    })
-                    .done(r -> request.setAttribute("successMessage", successMessage))
-                    .fail(e -> request.setAttribute("errorMessage", errorMessage));
-        } else {
+        
+        if (sumOfViolations > 0) {
+            logger.warn("Product update validation failed for ID: {}. Found {} violations", productId, sumOfViolations);
+            logger.debug("Validation violations: {}", violations);
             request.setAttribute("violations", violations);
             request.setAttribute("deleteImage", deleteImage);
+        } else {
+            try {
+                if (product.getImageName() != null) {
+                    String currentImageName = product.getImageName();
+                    if (deleteImage != null) {
+                        logger.debug("Deleting existing image: {} for product ID: {}", currentImageName, productId);
+                        ImageUtils.delete(currentImageName);
+                        product.setImageName(null);
+                    }
+                    ImageUtils.upload(request).ifPresent(imageName -> {
+                        logger.debug("Uploading new image: {} for product ID: {}", imageName, productId);
+                        ImageUtils.delete(currentImageName);
+                        product.setImageName(imageName);
+                    });
+                } else {
+                    ImageUtils.upload(request).ifPresent(imageName -> {
+                        logger.debug("Uploading new image: {} for product ID: {}", imageName, productId);
+                        product.setImageName(imageName);
+                    });
+                }
+
+                Optional<Category> categoryFromServer = Protector.of(() -> categoryService.getByProductId(product.getId()))
+                        .get(Optional::empty);
+
+                Protector.of(() -> {
+                    productService.update(product);
+                    if (categoryFromServer.isPresent()) {
+                        productService.updateProductCategory(product.getId(), categoryId);
+                        logger.info("Successfully updated product ID: {} with category ID: {}", productId, categoryId);
+                    } else {
+                        productService.insertProductCategory(product.getId(), categoryId);
+                        logger.info("Successfully inserted new category ID: {} for product ID: {}", categoryId, productId);
+                    }
+                })
+                .done(r -> {
+                    request.setAttribute("successMessage", "Sửa thành công!");
+                    logger.info("Product update successful for ID: {}", productId);
+                })
+                .fail(e -> {
+                    request.setAttribute("errorMessage", "Sửa thất bại!");
+                    logger.error("Failed to update product ID: {}. Error: {}", productId, e.getMessage(), e);
+                });
+            } catch (Exception e) {
+                logger.error("Unexpected error during product update for ID: {}. Error: {}", productId, e.getMessage(), e);
+                request.setAttribute("errorMessage", "Sửa thất bại!");
+            }
         }
 
         List<Category> categories = Protector.of(categoryService::getAll).get(ArrayList::new);

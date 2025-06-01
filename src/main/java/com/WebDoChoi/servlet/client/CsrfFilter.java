@@ -21,6 +21,7 @@ public class CsrfFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpSession session = request.getSession();
 
+
         // Tạo token CSRF nếu chưa có
         if (session.getAttribute("csrfToken") == null) {
             String token = UUID.randomUUID().toString();
