@@ -2,6 +2,7 @@ package com.WebDoChoi.servlet.admin.category;
 
 import com.WebDoChoi.beans.Category;
 import com.WebDoChoi.service.CategoryService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.Protector;
 import com.WebDoChoi.utils.TextUtils;
 
@@ -33,5 +34,10 @@ public class CategoryDetailServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
+    }
 }

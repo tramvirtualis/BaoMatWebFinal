@@ -1,0 +1,100 @@
+/* custom.css */
+
+/* Header and navbar background */
+.section-header,
+.header-main,
+.navbar-main {
+    background-color: #f8c8dc;
+}
+
+/* Text and icon color */
+.text-body,
+.navbar-light .navbar-nav .nav-link,
+.navbar .navbar-nav .nav-item .nav-link i {
+    color: white !important;
+}
+
+/* Navbar hover + active state */
+.navbar-light .navbar-nav .nav-link.active {
+    color: #000;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: black;
+    background-color: #fff;
+}
+
+/* Badge */
+.badge.bg-primary {
+    background-color: #f8c8dc;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #f8c8dc;
+    border-color: #ff66b2;
+}
+
+.btn-light {
+    background-color: #fff;
+    color: #ff66b2;
+}
+
+/* Toggle button */
+.navbar-toggler-icon {
+    background-color: white;
+}
+
+/* Section content margin */
+.section-content {
+    margin: 100px 0;
+}
+
+/* Card width and center alignment */
+.card-custom-width {
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Button đăng ký */
+.btn-register {
+    background-color: #ff3385;
+    color: white;
+    width: 100%;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-register:hover,
+.btn-register:focus {
+    background-color: #e62e75;
+    color: white;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(255, 51, 133, 0.5);
+}
+
+/* Form check spacing */
+.form-check {
+    margin-bottom: 1rem;
+}
+
+/* Radio inline spacing */
+.form-check.d-inline-block {
+    margin-right: 1.5rem;
+}
+
+/* Invalid feedback ul styling */
+.invalid-feedback ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+/* Login button*/
+.btn-login {
+    background-color: #ff3385;
+    color: white;
+}

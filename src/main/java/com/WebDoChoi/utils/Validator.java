@@ -111,8 +111,34 @@ public class Validator<T> {
         return this;
     }
 
-    public Validator<T> isTrue(boolean condition, String message) {
-        Optional<String> violation = condition ? Optional.empty() : Optional.of(message);
+    public Validator<T> hasUpperCase() {
+        Optional<String> violation = Optional.ofNullable(o)
+                .filter(obj -> !String.valueOf(obj).matches(".*[A-Z].*"))
+                .map(obj -> "Mật khẩu phải chứa ít nhất 1 chữ hoa");
+        violation.ifPresent(violations::add);
+        return this;
+    }
+
+    public Validator<T> hasLowerCase() {
+        Optional<String> violation = Optional.ofNullable(o)
+                .filter(obj -> !String.valueOf(obj).matches(".*[a-z].*"))
+                .map(obj -> "Mật khẩu phải chứa ít nhất 1 chữ thường");
+        violation.ifPresent(violations::add);
+        return this;
+    }
+
+    public Validator<T> hasDigit() {
+        Optional<String> violation = Optional.ofNullable(o)
+                .filter(obj -> !String.valueOf(obj).matches(".*\\d.*"))
+                .map(obj -> "Mật khẩu phải chứa ít nhất 1 số");
+        violation.ifPresent(violations::add);
+        return this;
+    }
+
+    public Validator<T> hasSpecialChar() {
+        Optional<String> violation = Optional.ofNullable(o)
+                .filter(obj -> !String.valueOf(obj).matches(".*[!@#$%^&*(),.?\":{}|<>].*"))
+                .map(obj -> "Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (!@#$%^&*(),.?\":{}|<>)");
         violation.ifPresent(violations::add);
         return this;
     }

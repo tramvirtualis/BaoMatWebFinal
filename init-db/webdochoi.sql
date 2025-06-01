@@ -268,7 +268,7 @@ CREATE TABLE `product_review` (
 CREATE TABLE `user` (
                         `id` bigint(20) NOT NULL,
                         `username` varchar(25) NOT NULL,
-                        `password` varchar(60) NOT NULL,
+                        `password` varchar(32) NOT NULL,
                         `fullname` varchar(50) NOT NULL,
                         `email` varchar(50) NOT NULL,
                         `phoneNumber` varchar(11) NOT NULL,

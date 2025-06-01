@@ -4,6 +4,7 @@ import com.WebDoChoi.beans.Category;
 import com.WebDoChoi.beans.Product;
 import com.WebDoChoi.service.CategoryService;
 import com.WebDoChoi.service.ProductService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.ImageUtils;
 import com.WebDoChoi.utils.Protector;
 
@@ -44,5 +45,10 @@ public class DeleteProductServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
+    }
 }

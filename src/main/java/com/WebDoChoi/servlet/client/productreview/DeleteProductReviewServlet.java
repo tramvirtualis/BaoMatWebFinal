@@ -1,6 +1,7 @@
 package com.WebDoChoi.servlet.client.productreview;
 
 import com.WebDoChoi.service.ProductReviewService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.Protector;
 
 import javax.servlet.ServletException;
@@ -19,6 +20,10 @@ public class DeleteProductReviewServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
         long productReviewId = Protector.of(() -> Long.parseLong(request.getParameter("productReviewId"))).get(0L);
         String productId = request.getParameter("productId");
 

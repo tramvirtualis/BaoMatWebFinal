@@ -43,9 +43,9 @@ public class SignupServlet extends HttpServlet {
         Map<String, List<String>> violations = new HashMap<>();
         Optional<User> userFromServer = Protector.of(() -> userService.getByUsername(values.get("username")))
                 .get(Optional::empty);
-        Optional<User> emailFromServer = Protector.of(() -> userService.getByEmail(values.get("email")))
+        Optional<User> userByEmail = Protector.of(() -> userService.getByEmail(values.get("email")))
                 .get(Optional::empty);
-        Optional<User> phoneFromServer = Protector.of(() -> userService.getByPhoneNumber(values.get("phoneNumber")))
+        Optional<User> userByPhoneNumber = Protector.of(() -> userService.getByPhoneNumber(values.get("phoneNumber")))
                 .get(Optional::empty);
 
         violations.put("usernameViolations", Validator.of(values.get("username"))
@@ -57,7 +57,11 @@ public class SignupServlet extends HttpServlet {
         violations.put("passwordViolations", Validator.of(values.get("password"))
                 .isNotNullAndEmpty()
                 .isNotBlankAtBothEnds()
-                .isAtMostOfLength(32)
+                .isAtLeastOfLength(8)
+                .hasUpperCase()
+                .hasLowerCase()
+                .hasDigit()
+                .hasSpecialChar()
                 .toList());
         violations.put("fullnameViolations", Validator.of(values.get("fullname"))
                 .isNotNullAndEmpty()
@@ -67,13 +71,13 @@ public class SignupServlet extends HttpServlet {
                 .isNotNullAndEmpty()
                 .isNotBlankAtBothEnds()
                 .hasPattern("^[^@]+@[^@]+\\.[^@]+$", "email")
-                .isNotExistent(emailFromServer.isPresent(), "Email")
+                .isNotExistent(userByEmail.isPresent(), "Email")
                 .toList());
         violations.put("phoneNumberViolations", Validator.of(values.get("phoneNumber"))
                 .isNotNullAndEmpty()
                 .isNotBlankAtBothEnds()
                 .hasPattern("^\\d{10,11}$", "số điện thoại")
-                .isNotExistent(phoneFromServer.isPresent(), "Số điện thoại")
+                .isNotExistent(userByPhoneNumber.isPresent(), "Số điện thoại")
                 .toList());
         violations.put("genderViolations", Validator.of(values.get("gender"))
                 .isNotNull()
@@ -93,24 +97,26 @@ public class SignupServlet extends HttpServlet {
 
         // Khi không có vi phạm trong kiểm tra các parameter
         if (sumOfViolations == 0) {
-            User user = new User(
-                    0L,
-                    values.get("username"),
-                    HashingUtils.hash(values.get("password")),
-                    values.get("fullname"),
-                    values.get("email"),
-                    values.get("phoneNumber"),
-                    Protector.of(() -> Integer.parseInt(values.get("gender"))).get(0),
-                    values.get("address"),
-                    "CUSTOMER"
-            );
             try {
+                User user = new User(
+                        0L,
+                        values.get("username"),
+                        HashingUtils.hash(values.get("password")),
+                        values.get("fullname"),
+                        values.get("email"),
+                        values.get("phoneNumber"),
+                        values.get("gender").equals("1") ? 1 : 0,
+                        values.get("address"),
+                        "CUSTOMER"
+                );
+                
                 userService.insert(user);
                 request.setAttribute("successMessage", successMessage);
+                request.getRequestDispatcher("/WEB-INF/views/signupView.jsp").forward(request, response);
+                return;
             } catch (Exception e) {
-                e.printStackTrace(); // In ra lỗi chi tiết
                 request.setAttribute("values", values);
-                request.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
+                request.setAttribute("errorMessage", errorMessage);
             }
         } else {
             // Khi có vi phạm

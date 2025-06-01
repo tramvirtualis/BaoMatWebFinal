@@ -5,6 +5,7 @@ import com.WebDoChoi.beans.OrderItem;
 import com.WebDoChoi.service.OrderItemService;
 import com.WebDoChoi.service.OrderService;
 import com.WebDoChoi.service.UserService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.Protector;
 
 import javax.servlet.ServletException;
@@ -56,7 +57,12 @@ public class OrderManagerServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
+    }
 
     public static double calculateTotalPrice(List<OrderItem> orderItems, double deliveryPrice) {
         double totalPrice = deliveryPrice;

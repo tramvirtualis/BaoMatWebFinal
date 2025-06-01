@@ -112,6 +112,8 @@
               </button>
               <form action="${pageContext.request.contextPath}/admin/orderManager/update" method="post"
                     id="update-confirm-${order.id}">
+                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
+
                 <input type="hidden" name="id" value="${order.id}">
                 <input type="hidden" name="action" value="CONFIRM">
               </form>
@@ -122,6 +124,7 @@
               </form>
               <form action="${pageContext.request.contextPath}/admin/orderManager/update" method="post"
                     id="update-reset-${order.id}">
+                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
                 <input type="hidden" name="id" value="${order.id}">
                 <input type="hidden" name="action" value="RESET">
               </form>

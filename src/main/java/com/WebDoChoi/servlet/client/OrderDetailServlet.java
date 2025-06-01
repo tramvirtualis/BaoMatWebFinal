@@ -6,6 +6,7 @@ import com.WebDoChoi.beans.Product;
 import com.WebDoChoi.service.OrderItemService;
 import com.WebDoChoi.service.OrderService;
 import com.WebDoChoi.service.ProductService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.Protector;
 
 import javax.servlet.ServletException;
@@ -58,8 +59,13 @@ public class OrderDetailServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
         long id = Protector.of(() -> Long.parseLong(request.getParameter("id"))).get(0L);
         Protector.of(() -> orderService.cancelOrder(id));
         response.sendRedirect(request.getContextPath() + "/orderDetail?id=" + id);
+
     }
 }
