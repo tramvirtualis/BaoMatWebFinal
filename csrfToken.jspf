@@ -1,0 +1,2 @@
+<%-- file: /WEB-INF/jspf/csrfToken.jspf --%>
+<input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />

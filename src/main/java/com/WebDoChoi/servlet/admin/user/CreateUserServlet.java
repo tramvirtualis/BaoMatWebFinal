@@ -2,6 +2,7 @@ package com.WebDoChoi.servlet.admin.user;
 
 import com.WebDoChoi.beans.User;
 import com.WebDoChoi.service.UserService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.HashingUtils;
 import com.WebDoChoi.utils.Protector;
 import com.WebDoChoi.utils.Validator;
@@ -28,6 +29,10 @@ public class CreateUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
         User user = new User();
         user.setUsername(request.getParameter("username"));
         user.setPassword(request.getParameter("password"));

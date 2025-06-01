@@ -8,6 +8,7 @@ import com.WebDoChoi.dto.SuccessMessage;
 import com.WebDoChoi.dto.WishlistItemRequest;
 import com.WebDoChoi.service.ProductService;
 import com.WebDoChoi.service.WishlistItemService;
+import com.WebDoChoi.utils.CsrfUtils;
 import com.WebDoChoi.utils.JsonUtils;
 import com.WebDoChoi.utils.Protector;
 
@@ -47,6 +48,10 @@ public class WishlistServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!CsrfUtils.isValid(request)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
         long id = Protector.of(() -> Long.parseLong(request.getParameter("id"))).get(0L);
         Protector.of(() -> wishlistItemService.delete(id));
         response.sendRedirect(request.getContextPath() + "/wishlist");

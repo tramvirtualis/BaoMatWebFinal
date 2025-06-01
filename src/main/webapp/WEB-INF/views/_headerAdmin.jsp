@@ -3,72 +3,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="servletPath" scope="page" value="${requestScope['javax.servlet.forward.servlet_path']}"/>
 
-<style>
-  /* Set the background color of the header and navbar to pink */
-  .header-main {
-    background-color: #f8c8dc; /* Pink background for the header */
-  }
-
-  .navbar-main {
-    background-color: #f8c8dc; /* Pink background for the navbar */
-  }
-
-  /* White text for navbar links and active state */
-  .navbar-light .navbar-nav .nav-link {
-    color: white; /* White text for navbar links */
-  }
-
-  .navbar-light .navbar-nav .nav-link.active {
-    color: #000; /* Dark text for active navbar link */
-  }
-
-  .navbar-light .navbar-nav .nav-link:hover {
-    color: #ff66b2; /* Change the text color on hover to pink */
-    background-color: #fff; /* White background on hover */
-    color: black;
-  }
-
-  .btn-primary {
-    background-color: #f8c8dc; /* Pink background for primary buttons */
-    border-color: #ff66b2; /* Pink border for buttons */
-  }
-
-  .btn-light {
-    background-color: #fff; /* White background for light buttons */
-    color: #ff66b2; /* Pink text for light buttons */
-  }
-
-  .section-header {
-    background-color: #f8c8dc; /* Pink background for the header section */
-  }
-
-  .badge.bg-primary {
-    background-color: #f8c8dc; /* Pink badge color */
-  }
-
-  .text-body, .navbar-light .navbar-nav .nav-link {
-    color: white !important; /* Ensure text color is white */
-  }
-
-  .navbar-toggler-icon {
-    background-color: white; /* White background for navbar toggle icon */
-  }
-
-  .navbar .navbar-nav .nav-item .nav-link i {
-    color: white; /* Set icon color to white in navbar */
-  }
-
-</style>
-
 <header class="section-header">
   <section class="header-main border-bottom">
     <div class="container">
       <div class="row align-items-center">
         <div class="col py-3">
           <a class="text-body" href="${pageContext.request.contextPath}/admin">
-            <h3><span class="badge" style="background-color: #f8c8dc; color: white">Admin</span> Shop Bán Đồ chơi</h3>
+            <h3><span class="badge bg-primary text-white">Admin</span> Shop Bán Đồ chơi</h3>
           </a>
-        </div> <!-- col.// -->
+        </div>
         <div class="col-sm-1">
           <ul class="nav col-12 col-lg-auto my-2 my-lg-0 justify-content-center justify-content-lg-end text-small">
             <li>
@@ -78,11 +21,11 @@
               </a>
             </li>
           </ul>
-        </div> <!-- col.// -->
-      </div> <!-- row.// -->
-    </div> <!-- container.// -->
-  </section> <!-- header-main.// -->
-</header> <!-- section-header.// -->
+        </div>
+      </div>
+    </div>
+  </section>
+</header>
 
 <nav class="navbar navbar-main navbar-expand-lg navbar-light border-bottom">
   <div class="container">
@@ -91,6 +34,7 @@
             aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -138,6 +82,5 @@
         </c:otherwise>
       </c:choose>
     </div>
-  </div> <!-- container.// -->
-</nav> <!-- navbar-main.// -->
-
+  </div>
+</nav>

@@ -49,54 +49,27 @@
                         Nhập mật khẩu hiện tại
                       </label>
                       <input type="password"
-                             class="form-control ${not empty requestScope.violations.currentPasswordViolations ? 'is-invalid' : ''}"
+                             class="form-control"
                              id="inputCurrentPassword"
                              name="currentPassword">
-                      <c:if test="${not empty requestScope.violations.currentPasswordViolations}">
-                        <div class="invalid-feedback">
-                          <ul class="list-unstyled">
-                            <c:forEach var="violation" items="${requestScope.violations.currentPasswordViolations}">
-                              <li>${violation}</li>
-                            </c:forEach>
-                          </ul>
-                        </div>
-                      </c:if>
                     </div>
                     <div class="mb-3">
                       <label for="inputNewPassword" class="form-label">
                         Nhập mật khẩu mới
                       </label>
                       <input type="password"
-                             class="form-control ${not empty requestScope.violations.newPasswordViolations ? 'is-invalid' : ''}"
+                             class="form-control"
                              id="inputNewPassword"
                              name="newPassword">
-                      <c:if test="${not empty requestScope.violations.newPasswordViolations}">
-                        <div class="invalid-feedback">
-                          <ul class="list-unstyled">
-                            <c:forEach var="violation" items="${requestScope.violations.newPasswordViolations}">
-                              <li>${violation}</li>
-                            </c:forEach>
-                          </ul>
-                        </div>
-                      </c:if>
                     </div>
                     <div class="mb-3">
                       <label for="inputNewPasswordAgain" class="form-label">
                         Nhập mật khẩu mới một lần nữa
                       </label>
                       <input type="password"
-                             class="form-control ${not empty requestScope.violations.newPasswordAgainViolations ? 'is-invalid' : ''}"
+                             class="form-control"
                              id="inputNewPasswordAgain"
                              name="newPasswordAgain">
-                      <c:if test="${not empty requestScope.violations.newPasswordAgainViolations}">
-                        <div class="invalid-feedback">
-                          <ul class="list-unstyled">
-                            <c:forEach var="violation" items="${requestScope.violations.newPasswordAgainViolations}">
-                              <li>${violation}</li>
-                            </c:forEach>
-                          </ul>
-                        </div>
-                      </c:if>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Đổi mật khẩu</button>
                   </form>

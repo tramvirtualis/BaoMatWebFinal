@@ -6,13 +6,14 @@
 <head>
   <jsp:include page="_meta.jsp"/>
   <title>Đăng ký</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/custom.css">
 </head>
 
 <body>
 <jsp:include page="_header.jsp"/>
 
-<section class="section-content" style="margin: 100px 0;">
-  <div class="card mx-auto" style="max-width: 380px">
+<section class="section-content">
+  <div class="card card-custom-width">
     <div class="card-body">
       <c:if test="${not empty requestScope.successMessage}">
         <div class="alert alert-success" role="alert">${requestScope.successMessage}</div>
@@ -20,8 +21,12 @@
       <c:if test="${not empty requestScope.errorMessage}">
         <div class="alert alert-danger" role="alert">${requestScope.errorMessage}</div>
       </c:if>
+
       <h4 class="card-title mb-4">Đăng ký</h4>
+
       <form action="${pageContext.request.contextPath}/signup" method="post">
+        <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}" />
+
         <div class="mb-3">
           <label for="inputUsername" class="form-label">Tên đăng nhập</label>
           <input type="text"
@@ -40,6 +45,7 @@
             </div>
           </c:if>
         </div>
+
         <div class="mb-3">
           <label for="inputPassword" class="form-label">Mật khẩu</label>
           <input type="password"
@@ -58,6 +64,7 @@
             </div>
           </c:if>
         </div>
+
         <div class="mb-3">
           <label for="inputFullname" class="form-label">Họ và tên</label>
           <input type="text"
@@ -76,6 +83,7 @@
             </div>
           </c:if>
         </div>
+
         <div class="mb-3">
           <label for="inputEmail" class="form-label">Email</label>
           <input type="email"
@@ -94,6 +102,7 @@
             </div>
           </c:if>
         </div>
+
         <div class="mb-3">
           <label for="inputPhoneNumber" class="form-label">Số điện thoại</label>
           <input type="text"
@@ -112,6 +121,7 @@
             </div>
           </c:if>
         </div>
+
         <div class="mb-3">
           <div class="form-check d-inline-block me-4">
             <input class="form-check-input ${not empty requestScope.violations.genderViolations
@@ -120,7 +130,7 @@
                    name="gender"
                    id="radioGender1"
                    value="0"
-            ${requestScope.values.gender.equals("0") ? 'checked' : ''}>
+            ${requestScope.values.gender eq "0" ? 'checked' : ''}>
             <label class="form-check-label" for="radioGender1">Nam</label>
           </div>
           <div class="form-check d-inline-block">
@@ -130,12 +140,11 @@
                    name="gender"
                    id="radioGender2"
                    value="1"
-            ${requestScope.values.gender.equals("1") ? 'checked' : ''}>
+            ${requestScope.values.gender eq "1" ? 'checked' : ''}>
             <label class="form-check-label" for="radioGender2">Nữ</label>
           </div>
           <c:if test="${not empty requestScope.violations.genderViolations}">
-            <div class="is-invalid"></div>
-            <div class="invalid-feedback">
+            <div class="invalid-feedback d-block">
               <ul class="list-unstyled">
                 <c:forEach var="violation" items="${requestScope.violations.genderViolations}">
                   <li>${violation}</li>
@@ -144,6 +153,7 @@
             </div>
           </c:if>
         </div>
+
         <div class="mb-3">
           <label for="inputAddress" class="form-label">Địa chỉ</label>
           <input type="text"
@@ -162,19 +172,19 @@
             </div>
           </c:if>
         </div>
+
         <div class="mb-3 form-check">
           <input class="form-check-input ${not empty requestScope.violations.policyViolations
-                   ? 'is-invalid' : (not empty requestScope.values.policy ? 'is-valid' : '')}"
+                   ? 'is-invalid' : ''}"
                  type="checkbox"
-                 value="checked"
                  id="checkboxPolicy"
                  name="policy"
-                 checked>
+          ${requestScope.values.policy eq "on" ? 'checked' : ''}>
           <label class="form-check-label" for="checkboxPolicy">
-            Đồng ý với <a href="#">điều khoản sử dụng</a>
+            Tôi đồng ý với <a href="${pageContext.request.contextPath}/privacy.html" target="_blank">chính sách bảo mật</a>
           </label>
           <c:if test="${not empty requestScope.violations.policyViolations}">
-            <div class="invalid-feedback">
+            <div class="invalid-feedback d-block">
               <ul class="list-unstyled">
                 <c:forEach var="violation" items="${requestScope.violations.policyViolations}">
                   <li>${violation}</li>
@@ -183,14 +193,17 @@
             </div>
           </c:if>
         </div>
-        <button type="submit" class="btn w-100" style="background-color: #ff3385; color: white">Đăng ký</button>
+
+        <button type="submit" class="btn btn-register">Đăng ký</button>
       </form>
-    </div> <!-- card-body.// -->
-  </div> <!-- card.// -->
-  <p class="text-center mt-4">Đã có tài khoản? <a href="${pageContext.request.contextPath}/signin">Đăng nhập</a></p>
-</section> <!-- section-content.// -->
+
+      <div class="mt-3 text-center">
+        <small>Đã có tài khoản? <a href="${pageContext.request.contextPath}/login">Đăng nhập</a></small>
+      </div>
+    </div>
+  </div>
+</section>
 
 <jsp:include page="_footer.jsp"/>
 </body>
-
 </html>
